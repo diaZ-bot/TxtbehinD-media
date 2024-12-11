@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text Behind Image/Video</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+    }
+    .container {
+      position: relative;
+      width: 80%;
+      max-width: 800px;
+      aspect-ratio: 16/9;
+      overflow: hidden;
+    }
+    .bg-content {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+    .text-overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3em;
+      color: rgba(255, 255, 255, 0.7);
+      z-index: 0;
+      pointer-events: none;
+    }
+    input[type="file"] {
+      margin: 1em 0;
+    }
+    input[type="text"] {
+      margin-bottom: 1em;
+      padding: 0.5em;
+      width: 60%;
+    }
+  </style>
+</head>
+<body>
+  <h1>Put Text Behind Image/Video</h1>
+  <input type="file" id="upload-bg" accept="image/*,video/*">
+  <input type="text" id="input-text" placeholder="Enter your text here">
+  <div class="container">
+    <div class="bg-content" id="bg-content">
+      <!-- Image or Video will be inserted here -->
+    </div>
+    <div class="text-overlay" id="text-overlay">Your Text</div>
+  </div>
+  <script>
+    const bgContent = document.getElementById('bg-content');
+    const textOverlay = document.getElementById('text-overlay');
+    const uploadBg = document.getElementById('upload-bg');
+    const inputText = document.getElementById('input-text');
+
+    // Update text overlay
+    inputText.addEventListener('input', () => {
+      textOverlay.textContent = inputText.value || "Your Text";
+    });
+
+    // Handle background upload
+    uploadBg.addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        const url = URL.createObjectURL(file);
+        if (file.type.startsWith('image')) {
+          bgContent.innerHTML = `<img src="${url}" alt="Background" style="width: 100%; height: 100%; object-fit: cover;">`;
+        } else if (file.type.startsWith('video')) {
+          bgContent.innerHTML = `<video src="${url}" autoplay loop muted style="width: 100%; height: 100%; object-fit: cover;"></video>`;
+        }
+      }
+    });
+  </script>
+</body>
+</html>
